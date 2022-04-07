@@ -1,0 +1,37 @@
+{% extends 'base.html'  %}
+
+{% block css%}
+<link rel="stylesheet" href="{{ url_for('static', filename='stuff/stuff.css') }}" >
+{% endblock %}
+
+{% block title%}  {% endblock %}
+
+{% block body %}
+<h1> Teacher create page</h1>
+<form method = "post" >
+	<label for="user"> Select user  </label>
+	<br>
+	<select name="user_id" required id="user">
+	{% for user in users %}
+		<option value="{{user['user_id']}}">{{user['user_id']}} {{user['fst_name']}} {{user['snd_name']}} {{user['thrd_name']}}</option>
+	{% endfor  %}
+	</select>
+	<br>
+	
+	<label for="faculty"> Select faculty </label>
+	<br>
+	<select name="faculty_id" id="faculty" required> 
+		{% for faculty in faculties%}
+		<option value="{{faculty['id']}}"> {{faculty['title']}} </option>
+		{% endfor %}
+	</select>
+	<br>
+	<label for="degree"> Degree</label>
+	<br>
+	<input name="degree" id="degree" requiered>
+	<br>
+	<input type="submit" value="Submit">
+	
+	</form>
+
+{% endblock %}

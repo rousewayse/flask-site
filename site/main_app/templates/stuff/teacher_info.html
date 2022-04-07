@@ -1,0 +1,32 @@
+{% extends 'base.html'  %}
+
+{% block css%}
+<link rel="stylesheet" href="{{ url_for('static', filename='stuff/stuff.css') }}" >
+{% endblock %}
+
+{% block title%}  {% endblock %}
+
+{% block body %}
+<h1> Teacher info  page</h1>
+<form method = "post" >
+
+	<label for="faculty"> faculty </label>
+	<br>
+	<select name="faculty_id" id="faculty" required> 
+		{% for faculty in faculties%}
+		{% if faculty['id'] == teacher['faculty_id']%}
+		<option value="{{faculty['id']}}" selected> {{faculty['title']}} </option>
+		{%else%}
+		<option value="{{faculty['id']}}"> {{faculty['title']}} </option>
+		{%endif%}
+		{% endfor %}
+	</select>
+	<br>
+	<label for="degree"> Degree</label>
+	<br>
+	<input name="degree" id="degree"  value="{{teacher['degree']}}"requiered>
+	<br>
+	<input type="submit" value="Submit">
+	</form>
+
+{% endblock %}

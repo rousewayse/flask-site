@@ -1,0 +1,9 @@
+
+{% if classes%}
+<ul>
+	{% for class in classes %}
+	<li> {{class['title']}} <a href="{{ url_for('profile.profile_info', id=class['teacher_id'] )}}">  {{class['teacher_fname'] }} {{class['teacher_sname']}} {{class['teacher_thname']}} </a>  </li>	
+	{%endfor%}
+</ul>
+
+{% endif%}

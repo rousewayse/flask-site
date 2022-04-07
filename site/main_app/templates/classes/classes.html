@@ -1,0 +1,20 @@
+{% extends 'base.html'%}
+
+{% block css%}
+
+{%endblock%}
+
+{%block title%}
+CLASSES
+{%endblock%}
+
+{% block body %}
+<h3> CLASSES LIST  <h3>
+<ul>
+	{%if g.is_teacher %}
+		{% include 'classes/classes_for_teacher.html'%}
+	{% else %}
+		{% include 'classes/classes_for_student.html' %}
+	{%endif%}
+</ul>
+{%endblock%}

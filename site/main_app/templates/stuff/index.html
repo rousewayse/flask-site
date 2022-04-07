@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block css%}
+	<link rel="stylesheet" href="{{ url_for('static', filename='stuff/index.css') }}">
+{% endblock %}
+
+{% block title %}
+STUFF PAGE
+{% endblock  %}
+
+{% block body %}
+<h3> THIS IS STUFF PAGE </h3>
+
+<div class="container">
+	<h4> USERS </h4>
+	{%if users%}
+	<table>
+		<tr>
+			<th>  USER NAME </th>
+			<th>  DATE CREATED </th>
+			<th>  ACTIVE </th>
+		</tr>
+	{%for  user in users%}
+		<tr>
+			<td> {{user['username']}}</td> 
+			<td> {{user['created']}}</td>
+			<td> {{user['active']}}</td>
+		</tr>
+	{% endfor %}
+	</table>
+	{% else  %}
+	<p class="alert"> NO USERS AVAILABLE</p>
+	{% endif %}
+</div>
+<p>
+<a class="btn" href="{{url_for('stuff.register')}}"> CREATE NEW </a>
+</p>
+<div class=container>
+	 <h4> STUDENTS </h4>
+	 {%if students%}
+		<ul>
+			{% for student in students %}
+			<li> <a href="{{url_for('stuff.student_info', id = student['user_id'])}}">{{student['group_title']}} --- {{student['fname']}} {{student['sname']}} {{student['thname']}} </li>
+			{%endfor%}
+		</ul>
+	 {%endif%}
+</div>
+<p>
+<a class="btn" href="{{url_for('stuff.create_student')}}"> CREATE STUDENT </a>
+</p>
+<div class=container>
+	 <h4> TEACHERS </h4>
+	 {%if teachers%}
+		<ul>
+			{% for teacher in teachers %}
+			<li> <a href="{{url_for('stuff.teacher_info', id = teacher['user_id'])}}">{{teacher['faculty_title']}} --- {{teacher['fname']}} {{teacher['sname']}} {{teacher['thname']}} </li>
+			{%endfor%}
+		</ul>
+	 {%endif%}
+</div>
+<p>
+<a class="btn" href="{{url_for('stuff.create_teacher')}}"> CREATE TEACHER </a>
+</p>
+
+<div class=container>
+	<h4> FACULTIES/GROUPS </h4>
+	{%if faculties %}
+		<ul>
+			{%for faculty in faculties%}
+				<li> <a href="{{url_for('stuff.faculty_info', id=faculty['id'])}}"> {{faculty['title']}} </a> 
+					{%if groups[faculty['id']]%}
+					<ul>
+					{%for group in groups[faculty['id']]%}
+					<li> <a href="{{url_for('stuff.group_info', id=group['id'])}}">{{group['title']}} </a> </li>
+					{%endfor%}
+					</ul>
+					{%endif%}
+				</li>
+			{% endfor %}
+		</ul>
+	{% else %}
+	{%endif%}
+</div>
+<p>
+<a class="btn" href="{{url_for('stuff.create_faculty')}}"> NEW FACULTY  </a> 
+<a class="btn" href="{{url_for('stuff.group_create')}}"> NEW GROUP </a>
+</p>
+<div class="container">
+	<h4> CLASSES </h4>
+	{%if classes %}
+	<table>
+		<tr>
+			<th>  TITLE </th>
+			<th> TEACHER </th>
+			<th>  FACULTY </th>
+			<th>  GROUP </th>
+		</tr>
+	{%if faculties %}
+	{%for faculty in faculties %}
+
+	{%for group in groups[faculty['id']]%}
+	{%if group%}
+	{%for  class_ in classes[group['id']]%}
+		<tr>
+			<td> <a href="{{url_for('stuff.class_info', id=class_['id'])}}">{{class_['title']}}</td> 
+			<td> <a href="{{url_for('profile.profile_info', id=class_['teacher_id'])}}">{{class_['teacher_fname']}} {{class_['teacher_sname']}} {{class_['teacher_thname']}}</td>
+			<td> {{class_['faculty_title']}}</td>
+			<td> {{class_['group_title'] }}</td>
+		</tr>
+	{% endfor %}
+	{%endif%}
+	{%endfor%}
+	{%endfor%}
+	{%endif%}
+	
+	</table>
+	{%else%}
+	<p class="alert"> NO CLASSES </p>
+	{%endif%}
+</div>
+<p>
+<a class="btn" href="{{url_for('stuff.create_class')}}"> CREATE CLASS </a>
+</p>
+{% endblock  %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block css%}
+	<link rel="stylesheet" href="{{ url_for( 'static', filename='profile/profile.css' )}}">	
+{% endblock %}
+
+{% block title %}
+
+PROFILE
+
+{% endblock %}
+
+
+{% block body %}
+<div class="person_info">
+	<h2> PERSON INFO </h2>
+	{%if user_info%}
+	<ul> 
+		<li> FIRST NAME: {{ user_info['fst_name'] }}</li>
+		<li> SECOND NAME: {{ user_info['snd_name']}}</li>
+		<li> THIRD NAME: {{ user_info['thrd_name'] }}</li>
+		{% if not g.not_me %}
+		<li> BIRTH DATE:  {{ user_info['birth_date']}}</li>
+		<li> EMAIL:  {{user_info['email']}}</li>
+		{%endif%}
+	</ul>
+	{% else %}
+	<p class="alert">NO PROFILE INFORMATION PROVIDED</p>
+	{% endif%}
+</div>
+<div class="person_info">
+	<h2> PERSON'S SPECIFIC INFO</h2>
+	{% if as_student_info%}
+	{% include 'profile/student_info.html'%}
+	{%elif as_teacher_info%}
+	{%include 'profile/teacher_info.html'%}
+	{%else%}
+	<p class="alert">NO SPECIFIC INFORMATION PROVIDED</p>
+	{%endif%}
+</div>
+{% endblock %}

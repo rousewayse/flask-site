@@ -1,0 +1,32 @@
+{% extends 'base.html'  %}
+{% block css%}
+<link rel="stylesheet" href="{{ url_for('static', filename='stuff/stuff.css') }}" >
+{% endblock %}
+
+{% block title%}  {% endblock %}
+
+{% block body %}
+<h1> Class info  page</h1>
+<form method = "post" >
+	<label for="teacher">  teacher  </label>
+	<br>
+	<select name="teacher_id" required id="teacher">
+	{% for teacher in teachers %}
+	{%if class_['teacher_id'] == teacher['id']%}
+	<option value="{{teacher['id']}}" selected>{{teacher['id']}} {{teacher['fst_name']}} {{teacher['snd_name']}} {{teacher['thrd_name']}} {{teacher['faculty'] }}</option>
+	{%else%}
+	<option value="{{teacher['id']}}"> {{teacher['id']}} {{teacher['fst_name']}} {{teacher['snd_name']}} {{teacher['thrd_name']}} {{teacher['faculty'] }}</option>
+	{%endif%}
+	{% endfor  %}
+	</select>
+	<br>
+
+	<label for="title">Title</label>
+	<br>
+	<input name="title" id="title" value="{{class_['title']}}" requiered>
+	<br>
+
+	<input type="submit" value="Submit">
+	</form>
+
+{% endblock %}

@@ -1,0 +1,216 @@
+import functools
+from flask import (
+    Blueprint, 
+    flash,
+    g, 
+    redirect, 
+    render_template,
+    request,
+    url_for
+)
+from werkzeug.security import generate_password_hash
+from werkzeug.exceptions import abort
+from main_app.auth import login_required
+from main_app.database import get_db
+
+from main_app.err_messages import * 
+bp = Blueprint('stuff', __name__, url_prefix='/stuff')
+
+
+
+
+def stuff_login_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is None:
+            return redirect(url_for('auth.login'))
+        err = None
+
+        user_id = g.user['id']
+        db = get_db()
+        
+        ifStuff = db.execute(
+            'SELECT * FROM stuff WHERE user_id = ?', (user_id,)
+        ).fetchone()
+        print(ifStuff) 
+        err = None
+
+        if ifStuff is None:
+            err = "Stuff account required"
+            flash(err)
+            #return redirect( url_for('auth.login'))
+            abort(403)
+        return view(**kwargs)
+    return wrapped_view
+
+
+@bp.route('/', methods=['GET'])
+@stuff_login_required
+def stuff_main():
+    return render_template('stuff/index.html')
+
+@bp.route('/register', methods=['GET', 'POST'])
+@stuff_login_required
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        db = get_db()
+        err = None
+
+        if not username:
+            err = username_required_err()
+        elif not password:
+            err = password_required_err()
+        print(username)
+        if err is None:
+            try:
+                db.execute(
+                    'INSERT INTO user (username, pass_hash) VALUES (?, ?)',
+                    (username, generate_password_hash(password))
+                )
+                db.commit()
+            except db.IntegrityError:
+                err = username_already_in_use_err()
+            else: 
+                return redirect(url_for('stuff.stuff_user_info', username=username))
+        flash(err)
+    return render_template('stuff/register.html')
+
+@bp.route('/user_info/<string:username>/', methods=['GET', 'POST'])
+def stuff_user_info(username = None):
+    db = get_db()
+
+    user = db.execute(
+        'SELECT * FROM user WHERE username  = ?', (username, ) 
+    ).fetchone()
+    if user is None:
+        abort(404)
+    user_id = user['id']
+
+    user_info = db.execute(
+        'SELECT * FROM user_info WHERE user_id = ?', (user_id, )
+    ).fetchone()
+   
+    g.user_info_to_update = user_info
+
+    if request.method == 'POST':
+        fst_name = request.form['fst_name']
+        snd_name = request.form['snd_name']
+        thrd_name = request.form['thrd_name']
+        birth_date = request.form['birth_date']
+        email = request.form['email']
+        try:
+            if user_info is None:
+                db.execute(
+                    'INSERT INTO user_info (user_id ,fst_name, snd_name, thrd_name, birth_date, email) VALUES (?, ?, ?, ?, ?, ?)', 
+                    (user_id, fst_name, snd_name, thrd_name, birth_date, email,)
+                )
+            else:
+                db.execute(
+                    'UPDATE user_info SET fst_name = ?, snd_name = ?, thrd_name = ?, birth_date = ?, email = ? WHERE user_id = ?',
+                    (fst_name, snd_name, thrd_name, birth_date, email, user_id,)
+                )
+            db.commit()
+        except db.IntegrityError:
+            flash("Operation failed")
+            return render_template('stuff/user_info.html')        
+        return "ADDED"
+    return render_template('stuff/user_info.html')
+
+@bp.route('/faculty/<int:id>/', methods=['GET', 'POST'])
+def faculty_info(id = None):
+    db = get_db()
+
+    faculty = db.execute('SELECT * FROM faculty WHERE id = ?', (id,)).fetchone()
+
+    if faculty is None:
+        abort(404)
+
+    g.faculty_to_update = dict(faculty)
+
+    if request.method == 'POST':
+        faculty_title = request.form['title']
+        try:
+            db.execute('UPDATE faculty SET title = ? WHERE id = ?', (faculty_title, id, ))
+            db.commit()
+        except db.IntegrityError:
+            flash ("Operation failed")
+            return render_template('stuff/faculty_info.html')
+        g.faculty_to_update['title'] = faculty_title
+    return render_template('stuff/faculty_info.html')
+
+
+@bp.route('/faculty/create', methods=['GET', 'POST'])
+def create_faculty():
+    db = get_db()
+
+    if request.method == 'POST':
+        title = request.form['title']
+
+        try:
+            db.execute('INSERT INTO faculty (title) VALUES (?)', (title,))
+            db.commit()
+        except db.IntegrityError:
+            flash("Operation failed")
+            return render_template('stuff/faculty_create.html')
+        return "FACULTY WAS CREATED"
+    return render_template('stuff/faculty_create.html')
+
+def get_faculties():
+    db = get_db()
+    faculties = db.execute('SELECT *  FROM faculty').fetchall()
+    if faculties is None:
+        return None
+
+    return [ dict(faculty) for faculty in faculties]
+        
+
+@bp.route('groups/create', methods=['GET', 'POST'])
+def group_create():
+    db = get_db()
+    if request.method == 'POST':
+        title = request.form['title']
+        faculty_title = request.form['faculty']
+
+        faculty = db.execute('SELECT * FROM faculty WHERE title=?', (faculty_title,)).fetchone()
+        if faculty is None:
+            flash("NO SUCH FACULTY")
+        faculty_id = faculty['id']
+        try:
+            db.execute('INSERT INTO groups (title, faculty_id) VALUES (?, ?)', (title, faculty_id,))
+            db.commit()
+        except db.IntegrityError:
+            flash("Operation failed")
+            return render_template('stuff/group_create.html', faculties=get_faculties())
+        return "DONE"
+       # return render_template('stuff/group_create.html')
+    return render_template('stuff/group_create.html', faculties=get_faculties())
+
+@bp.route('groups/info/<int:id>', methods=['GET', 'POST'])
+def group_info(id = None):
+    
+    if id is None:
+        abort(404)
+
+    db = get_db()
+    group = db.execute('SELECT * FROM groups WHERE id = ?', (id,)).fetchone()
+    if group is None:
+        abort(404)
+    group = dict(group)
+
+    if request.method == 'POST':
+        title = request.form['title']
+        faculty_id = request.form['faculty_id']
+        try:
+            db.execute('UPDATE groups SET faculty_id = ?, title = ?  WHERE id = ?', (faculty_id, title, id))
+            db.commit()
+        except db.IntegrityError:
+            flash("Operation failed")
+            return render_template('stuff/group_info.html', faculties=get_faculties(), group_id = id, group=group)
+        group['faculty_id'] = faculty_id
+        group['title'] = title
+        return redirect(url_for('stuff.group_info', id=id))
+        #return render_template('stuff/group_info.html', faculties=get_faculties(), group=group)
+    return render_template('stuff/group_info.html', faculties=get_faculties(), group_id = id, group = group)

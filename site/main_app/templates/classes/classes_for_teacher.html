@@ -1,0 +1,16 @@
+{%if groups %}
+<ul>
+{% if classes%}
+{% for group in groups%}
+		<li> 
+			<h5> {{ group['group_title']}} </h5>
+			<ul>
+			{%for class_ in classes[group['group_id']]%}
+			<li> {{class_['title']}}  </li>	
+			{% endfor %}
+			</ul>
+		</li>
+{% endfor %}
+{% endif%}
+</ul>
+{%endif%}

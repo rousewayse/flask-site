@@ -1,0 +1,25 @@
+
+
+
+<header>
+	<ul class="header_ul">
+		<li > <a href="{{ url_for('index') }}"> MAIN PAGE </a> </li>
+		<li > 
+			{% if g.user  %}
+			USER: {{g.user['username']}}
+			{%else%}
+			<a href="{{ url_for('auth.login') }}">Log In</a>
+			{% endif %}
+	  	</li>
+		{% if g.is_admin  %}
+		<li> <a href="{{ url_for('stuff.stuff_main') }}"> STUFF PAGE </a>  </li>	
+		{% elif  g.user %}
+		<li > <a href="{{ url_for('profile.profile_info', id = g.user['id']) }}"> PROFILE </a></li>
+		<li> <a href="{{ url_for('classes.classes')}}"> CLASSES </a> </li>
+		{% endif %}
+		{% if  g.user %}
+		<li > <a href="{{ url_for('auth.logout') }}"> Log Out </a> </li>
+		{% endif %}
+		
+	</ul>
+</header>

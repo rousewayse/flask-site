@@ -1,0 +1,25 @@
+{% extends 'base.html'  %}
+{% block css%}
+<link rel="stylesheet" href="{{ url_for('static', filename='stuff/stuff.css') }}" >
+{% endblock %}
+{% block title%}  {% endblock %}
+
+{% block body %}
+<h1> Group  create page</h1>
+<form method = "post" >
+	<label for="title"> Group  title </label>
+	<br>
+	<input name="title" id="title" value="Group title" required>
+	<br>
+	<label for="faculty"> Group's faculty </label>
+	<br>
+	<select name="faculty" id="faculty" value="faculty" required>
+		{% for option in faculties %}
+		<option value="{{option['title']}}" > {{option['title']}} </option>
+		{% endfor %}
+	</select>
+	<br>
+	<input type="submit" value="Submit">
+	</form>
+
+{% endblock %}

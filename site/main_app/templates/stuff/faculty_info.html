@@ -1,0 +1,28 @@
+{% extends 'base.html'  %}
+
+{% block css%}
+<link rel="stylesheet" href="{{ url_for('static', filename='stuff/stuff.css') }}" >
+{% endblock %}
+
+{% block title%}  {% endblock %}
+
+{% block body %}
+<h1>Faculty info page</h1>
+<form method = "post" >
+	{% if g.faculty_to_update %}
+	<label for="title"> Faculty title </label>
+	<br>
+	<input name="title" id="title" value="{{ g.faculty_to_update['title'] }} " requred>
+	<br>
+	<input type="submit" value="Submit">
+	<br>
+	{% else %}
+	<label for="title"> Faculty title </label>
+	<br>
+	<input name="title" id="title"  requred>
+	<br>
+	<input type="submit" value="Submit">
+	{% endif %}
+</form>
+
+{% endblock %}

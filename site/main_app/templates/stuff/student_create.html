@@ -1,0 +1,72 @@
+{% extends 'base.html'  %}
+{% block css%}
+<link rel="stylesheet" href="{{ url_for('static', filename='stuff/stuff.css') }}" >
+{% endblock %}
+{% block title%}  {% endblock %}
+
+{% block body %}
+<h1> student  create page</h1>
+<form method = "post" >
+	<label for="user"> Select user  </label>
+	<br>
+	<select name="user_id" required id="user">
+	{% for user in users %}
+		<option value="{{user['user_id']}}">{{user['user_id']}} {{user['fst_name']}} {{user['snd_name']}} {{user['thrd_name']}}</option>
+	{% endfor  %}
+	</select>
+	<br>
+
+	<label for="group"> Select group </label>
+	<br>
+	<select name="group_id" required id="group"> 
+		{%for group in groups%}
+		<option value="{{group['id']}}"> {{group['title']}} {{group['faculty_title']}}</option>
+		{% endfor %}
+	</select>
+	<br>
+
+	<label for="cource"> Select course </label>
+	<r>
+	<select name="cource" required id="cource">
+		{%for i in range(1, 7)%}
+		<option value="{{i}}">{{i}} course </option>
+		{% endfor %}
+	</select>
+	<br>
+
+	<label for="directory"> Directory </label>
+	<br>
+	<input name="directory" id="directory" value="" required>
+	<br>
+
+	<label for="degree"> Degree</label>
+	<br>
+	<select name="degree" id="degree" value="" required>
+		{% for degree  in ['bachelor', 'master', 'PhD student'] %}
+		<option value="{{degree}}"> {{degree}}</option>
+		{% endfor %}
+	</select>
+	<br>
+
+
+	<label for="form"> Form </label>
+	<br>
+	<select name="form" id="form" value="" required>
+		{% for form  in ['fulltime', 'distant', 'mixed'] %}
+		<option value="{{form}}"> {{form}}</option>
+		{% endfor %}
+	</select>
+	<br>
+
+	<label for="fee"> Fee </label>
+	<br>
+	<select name="fee" id="fee" value="" required>
+		{% for fee  in ['free', 'paid'] %}
+		<option value="{{fee}}"> {{fee}}</option>
+		{% endfor %}
+	</select>
+	<br>
+	<input type="submit" value="Submit">
+	</form>
+
+{% endblock %}

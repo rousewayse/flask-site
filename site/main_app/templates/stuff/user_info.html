@@ -1,0 +1,59 @@
+{% extends 'base.html'  %}
+
+{% block css%}
+<link rel="stylesheet" href="{{ url_for('static', filename='stuff/stuff.css') }}" >
+{% endblock %}
+
+{% block title%}  {% endblock %}
+
+{% block body %}
+<h1>USER INFO PAGE</h1>
+<form method = "post" >
+	{% if g.user_info_to_update  %}
+	<label for="fst_name"> first name </label>
+	<br>
+	<input name="fst_name" id="fst_name" value="{{ g.user_info_to_update['fst_name']  }}" required>
+	<br>
+	<label for="snd_name"> second name </label>
+	<br>
+	<input  name="snd_name" id="snd_name" value="{{ g.user_info_to_update['snd_name']}}" required>
+	<br>
+	<label for="thrd_name"> third name </label>
+	<br>
+	<input  name="thrd_name" id="thrd_name" value="{{ g.user_info_to_update['thrd_name'] }}" >
+	<br>
+	<label for="birth_date"> birth date </label>
+	<br>
+	<input  name="birth_date" id="birth_date" value="{{ g.user_info_to_update['birth_date'] }}"  required>
+	<br>
+	<label for="email"> email </label>
+	<br>
+	<input  name="email" id="email" value="{{ g.user_info_to_update['email'] }}"  required>
+	<br>
+	<input type="submit" value="Submit">
+	{% else %}
+	<label for="fst_name"> first name </label>
+	<br>
+	<input name="fst_name" id="fst_name"  required>
+	<br>
+	<label for="snd_name"> second name </label>
+	<br>
+	<input  name="snd_name" id="snd_name"  required>
+	<br>
+	<label for="thrd_name"> third name </label>
+	<br>
+	<input  name="thrd_name" id="thrd_name" >
+	<br>
+	<label for="birth_date"> birth date </label>
+	<br>
+	<input  name="birth_date" id="birth_date"   required>
+	<br>
+	<label for="email"> email </label>
+	<br>
+	<input  name="email" id="email"   required>
+	<br>
+	<input type="submit" value="Submit">
+	{% endif %}
+</form>
+
+{% endblock %}

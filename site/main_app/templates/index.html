@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title  %} <title> INDEX PAGE  </title> {% endblock %}
+
+{% block  body %}  
+	THIS IS INDEX PAGE
+{% if g.user %}
+<p> hello,  {{g.user['username'] }} </p>
+{% endif %}
+
+{% endblock%}

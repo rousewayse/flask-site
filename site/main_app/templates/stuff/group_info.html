@@ -1,0 +1,31 @@
+{% extends 'base.html'  %}
+
+{% block css%}
+<link rel="stylesheet" href="{{ url_for('static', filename='stuff/stuff.css') }}" >
+{% endblock %}
+
+{% block title%}  {% endblock %}
+
+{% block body %}
+<h1> Group  info  page</h1>
+{{faculties}}
+{{ group['faculty_id'] }}
+<form method = "post" >
+	<label for="title"> Group  title </label>
+	<br>
+	<input name="title" id="title" value="{{group['title']}}" requred>
+	<br>
+	<select name="faculty_id" id="faculty" >
+		{% for option in faculties %}
+		{% if group['faculty_id']==option['id'] %}
+		<option value="{{option['id']}}" selected>{{option['title']}}</option>
+		{% else %}
+		<option value="{{option['id']}}">{{option['title']}}</option>
+		{%endif%}
+		{% endfor %}
+	</select>
+	<br>
+	<input type="submit" value="Submit">
+	</form>
+
+{% endblock %}

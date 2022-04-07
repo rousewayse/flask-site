@@ -1,0 +1,14 @@
+
+
+<ul>
+	<li> GROUP: {{ as_student_info['group_title']}}</li>
+	<li> GROUP'S FACULTY: {{ as_student_info['faculty_title']}}</li>
+	<li> COURSE:  {{ as_student_info['cource']}}</li>
+	<li> DIRECTORY:  {{ as_student_info['directory'] }}</li>
+	<li> DEGREE:  {{ as_student_info['degree']}}</li>
+	<li> FORM: {{ as_student_info['form']}}</li>
+	{%if not g.not_me%}
+	<li> FEE: {{ as_student_info['fee']}}</li>
+	{%endif%}
+	
+</ul>

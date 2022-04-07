@@ -1,0 +1,38 @@
+
+.container {
+	border-bottom: 2px solid black;
+	overflow: scroll;
+	max-height: 600px;
+}
+
+.container table {
+	width: 50%;
+	text-align: center;
+	border-spacing: 7px;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+.container  li {
+	margin-bottom: 7px;
+}
+
+.container a{
+	text-decoration: none;
+	color: black;
+}
+.alert{
+	width: 33%;
+	text-align: center;
+	color: red;
+	border: 2px solid red;
+	padding = 5px;
+}
+
+.btn {
+	padding: 1px;
+	border: 1px solid black;
+	margin-left: 14px;
+	color: black;
+	text-decoration: none;
+}

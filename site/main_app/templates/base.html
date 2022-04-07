@@ -1,0 +1,19 @@
+<!doctype html>
+<head>
+	<title> {% block title %} {% endblock%} </title>
+	{% block css%}
+
+	{% endblock%}
+	<link rel="stylesheet" href="{{ url_for( 'static', filename='header.css' )}}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+</head>
+<body>
+	{% include 'header.html' %}	
+	{% block body%} {% endblock%}
+	
+	{% for message in get_flashed_messages() %}
+	<div class="flash"> {{ message }} </div>
+	{% endfor %}
+
+
+</body>
